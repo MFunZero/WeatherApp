@@ -73,7 +73,7 @@ class ViewController: UIViewController ,CLLocationManagerDelegate{
                 self.location.text = name
                 self.updateWeatherInfo(name)
             } else {
-                NSLog("反编码地理信息出错，现采用ip地理位置获取")
+                NSLog("反编码信息为空")
                
             }
         })
