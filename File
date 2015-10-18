@@ -1,0 +1,7 @@
+{"resultcode":"1",
+"resultinfo":"Successful",
+"row":{"status":"OK",
+"result":{"location":{"lng":116.407431,"lat":39.914492},
+"formatted_address":"\u5317\u4eac\u5e02\u4e1c\u57ce\u533a\u4e1c\u957f\u5b89\u8857",
+"business":"\u5929\u5b89\u95e8,\u524d\u95e8,\u5927\u6805\u680f",
+"addressComponent":{"city":"\u5317\u4eac\u5e02","direction":"","distance":"","district":"\u4e1c\u57ce\u533a","province":"\u5317\u4eac\u5e02","street":"\u4e1c\u957f\u5b89\u8857","street_number":""},"cityCode":131}}}

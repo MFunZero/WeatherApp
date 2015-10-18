@@ -1,0 +1,67 @@
+1.判断华氏摄氏温度以及白天黑夜
+
+if  let resultTemp = jsonResult["main"]?.objectForKey("temp")  as? Double
+{
+var temperature: Double
+if jsonResult["sys"]?.objectForKey("country") as? String  == "US" {
+temperature = round(((resultTemp - 273.15)*1.8)+32)
+}else{
+temperature = round(resultTemp - 273.15)
+}
+self.temperature.text = "\(temperature)"
+self.temperature.font = UIFont.boldSystemFontOfSize(60)
+
+let name = jsonResult["name"] as? String
+self.location.font = UIFont.boldSystemFontOfSize(25)
+self.location.text = "\(name)"
+let condition = (jsonResult["weather"] as! NSArray)[0].objectForKey("id") as! Int
+let sunrise = jsonResult["sys"]?.objectForKey("sunrise") as? Double
+let sunset = jsonResult["sys"]?.objectForKey("sunset") as? Double
+
+var nightTime = false
+let now = NSDate().timeIntervalSince1970
+if now < sunrise || now > sunset {
+nightTime = true
+}
+self.updateWeatherIcon(condition,nightTime:nightTime)
+}else{
+
+}
+2.clorelocation反地理解码，但是由于本人网络环境原因，未能解析，其中还存在部分疑惑，解码失败故而专项ip地址获取城市名称的地名解析
+var geocoder = CLGeocoder()
+var p:CLPlacemark?
+geocoder.reverseGeocodeLocation(location, completionHandler: {
+(placemarks, error) -> Void in
+//强制转成简体中文
+var array = NSArray(object: "zh-hans")
+NSUserDefaults.standardUserDefaults().setObject(array, forKey: "AppleLanguages")
+//显示所有信息
+if error != nil {
+//println("错误：\(error.localizedDescription))")
+self.reloadData()
+return
+}
+let pm = placemarks!
+if pm.count > 0{
+p = placemarks![0] as? CLPlacemark
+//println(p) //输出反编码信息
+
+var name:String = (p?.name)!
+self.location.text = name
+self.updateWeatherInfo(name)
+} else {
+NSLog("反编码地理信息出错，现采用ip地理位置获取")
+
+}
+})
+3.根据城市地名查询天气信息的api解析过程中，使用扩展处理“省”，“市”等区域的地方伤遗留逻辑问题，api获取的cityName可能存在区县的情况，尚未完全处理这些情况，仅实现市的地名转化去掉“市”以实现天气api获取，因为根据城市名称获取天气不能带“市”后缀。
+4.因为api的原因，获取字段为weather状况，没有完备的天气代码，故而在判断天气状况时候条件不完备。
+if condition.containsString("晴") {
+self.icon.image = UIImage(named: "qing")
+}
+else if condition.containsString("雨"){
+self.icon.image = UIImage(named: "rain")
+}else if condition.containsString("霾"){
+self.icon.image = UIImage(named: "cloud")
+}
+5.在出错处理方面尚存在逻辑错误，地理位置请求不到，天气信息请求不到时候白天还是夜晚的判定图标未做处理
